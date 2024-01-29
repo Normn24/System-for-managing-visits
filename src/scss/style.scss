@@ -26,4 +26,40 @@ ul, li {
   list-style: none;
 }
 
+#taskBoard{
+  display: flex;
+  width: 900px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
 
+.card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  max-width: 300px;
+  position: relative;
+}
+
+.delete-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  color: red;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 250px;
+  margin: 10px;
+}
+
+.edit-form label {
+  margin-bottom: 5px;
+}
+
+.edit-form input {
+  margin-bottom: 10px;
+}

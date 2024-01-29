@@ -10,8 +10,26 @@
 
 <body>
 
-	<section class="filer__section">
-  <h1>Hello World</h1>
+	<section class="filter__section">
+  <div id="filterForm">
+    <label for="searchInput">Search:</label>
+    <input type="text" id="searchInput" oninput="filterCards()">
+    <label for="statusFilter">Status:</label>
+    <select id="statusFilter" onchange="filterCards()">
+      <option value="">All</option>
+      <option value="active">Active</option>
+      <option value="completed">Completed</option>
+    </select>
+    <label for="priorityFilter">Priority:</label>
+    <select id="priorityFilter" onchange="filterCards()">
+      <option value="">All</option>
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
+  </div>
+
+  <div id="taskBoard"></div>
 </section>
 	<script src="js/main.min.js"></script>
 </body>
