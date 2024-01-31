@@ -1,0 +1,66 @@
+.header {
+    background: url(../img/header/hero-3-cover.png);
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+
+    &__name {
+        font-weight: 700; 
+        font-size: 45px; 
+      padding-top: 2%;
+      padding-left:8%;
+        color: aqua;
+    }
+    &__btn-make-visit{
+       float: right;
+       width: 150px;
+       height: 50px;
+       color: white;
+       border-radius: 20px;
+       background-color: #3E36B0;
+       margin: -3% 3%;
+       border: #3E36B0;
+    }
+&__greetings{
+    margin-top: 10%;
+    margin-left: 20%;
+    color: bisque;
+}
+&__appointment-heading{
+    color: white ;
+    font-size: 60px;
+    margin-left: 10%;
+}
+&__form{
+    width: 400px;
+    background-color: white;
+    margin-top: 5%;
+    margin-left: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 20px;
+}
+}
+.form{
+    &__button-close-form{
+width: 100px;
+height: 40px;
+    }
+    &__button-create-visit{
+        width: 100px;
+        height: 40px; 
+    }
+}
+.card{
+    width: 400px;
+    background-color: white;
+    margin-top: 5%;
+    margin-left: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+border: 2px solid black;
+    padding: 20px;
+}
