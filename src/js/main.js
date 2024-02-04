@@ -1,45 +1,22 @@
 const token = "6b6edd59-d784-4e87-a1cb-342f6158ace1";
 
-// fetch("https://ajax.test-danit.com/api/v2/cards", {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${token}`
-//   },
-//   body: JSON.stringify({
-//     // name: 'Білий Рома',
-//     name: 'Кіндер Андрій',
-//     // name: 'Лисак Влад',
-//     title: 'Визит к кардиологу',
-//     description: 'Плановый визит',
-//     doctor: 'Cardiologist',
-//     bp: '24',
-//     age: 23,
-//     weight: 70,
-//     // status: "Active",
-//     status: "Completed",
-//     // priority: "low",
-//     priority: "medium",
-//     // priority: "high",
-//   })
-// })
-//   .then(response => response.json())
-//   .then(response => console.log(response))
-
-
 async function displayCard(cardData) {
   const taskBoard = document.querySelector("#taskBoard");
   const cardContainer = document.createElement("div");
+
   cardContainer.className = "card";
   cardContainer.setAttribute("data-id", cardData.id);
-  cardContainer.setAttribute('data-status', cardData.status);
-  cardContainer.setAttribute('data-priority', cardData.priority);
 
   cardContainer.innerHTML = `
-      <p>Name: ${cardData.name}</p>
-      <p>Doctor: ${cardData.doctor}</p>
+      <div class="card__text">
+      <h4>Name:</h4> <p>${cardData.name}</p>
+      <h4>Doctor:</h4> <p>${cardData.doctor}</p>
+      <h4>Description:</h4> <p>${cardData.description}</p>
+      </div>
+      <div class="button__contianer">
       <button onclick="showMore(${cardData.id})">Show more</button>
       <button onclick="openEditModal(${cardData.id})">Edit</button>
+      </div>
       <span class="delete-icon" onclick="deleteCard(${cardData.id})">&#10006;</span>
     `;
 
@@ -96,31 +73,42 @@ async function openEditModal(cardId) {
   const optionActive = (value, option) => value === option ? "selected" : "";
 
   const editForm = document.createElement("div");
-  editForm.className = "edit-form";
+  editForm.className = "edit__form";
   editForm.innerHTML = `
-    <label for="editName">Name:</label>
-    <input type="text" id="editName" value="${cards.name}">
-    <label for="editDoctor">Doctor:</label>
-    <select id="editDoctor" onchange="handleDoctorChange()">
-      <option value="Cardiologist" ${optionActive(cards.doctor, "Cardiologist")}>Cardiologist</option>
-      <option value="Dentist"  ${optionActive(cards.doctor, "Dentist")}>Dentist</option>
-      <option value="Therapist"  ${optionActive(cards.doctor, "Therapist")}>Therapist</option>
+    <div class="input-group">
+      <input required="" type="text" name="text" autocomplete="off" class="input" id="editName" value="${cards.name}">
+      <label for="editName" class="user-label">Name</label>
+    </div>
+    <label for="editDoctor" class="select__label name__select1">Doctor</label>
+    <div class="select select__edit-container">
+    <select id="editDoctor" class="edit__select" onchange="handleDoctorChange()">
+    <option value="Cardiologist" ${optionActive(cards.doctor, "Cardiologist")}>Cardiologist</option>
+    <option value="Dentist"  ${optionActive(cards.doctor, "Dentist")}>Dentist</option>
+    <option value="Therapist"  ${optionActive(cards.doctor, "Therapist")}>Therapist</option>
     </select>
-    <label for="editDescription">Description:</label>
-    <input type="text" id="editDescription" value="${cards.description}">
-    <label for="editStatus">Status:</label>
-    <select id="editStatus">
+    </div>
+    <div class="input-group">
+    <input required="" type="text" name="text" autocomplete="off" class="input" id="editDescription" value="${cards.description}">
+    <label for="editDescription" class="user-label">Description</label>
+  </div>
+    
+    <label for="editStatus" class="select__label name__select2">Status</label>
+    <div class="select select__edit-container">
+    <select id="editStatus" class="edit__select">
       <option value="" disabled selected>Select status</option>
       <option value="active" ${optionActive(cards.status, "active")}>Active</option>
       <option value="completed" ${optionActive(cards.status, "completed")}>Completed</option>
     </select>
-    <label for="editPriority">Priority:</label>
-    <select id="editPriority">
+    </div>
+    <label for="editPriority" class="select__label name__select3">Priority</label>
+    <div class="select select__edit-container">
+    <select id="editPriority" class="edit__select">
       <option value="" disabled selected>Select priority</option>
       <option value="low" ${optionActive(cards.priority, "low")}>Low</option>
       <option value="medium" ${optionActive(cards.priority, "medium")}>Medium</option>
       <option value = "high" ${optionActive(cards.priority, "high")}> High</ >
     </select > 
+    </div>
     <div id="additionalFields"></div>
     <button onclick="saveChanges(${cardId})">Save</button>
   `;
@@ -142,24 +130,36 @@ function handleDoctorChange() {
 
   if (selectedDoctor === 'Cardiologist') {
     additionalFieldsContainer.innerHTML = `
-      <label for="editAge">Age:</label>
-      <input type="text" id="editAge">
-      <label for="editPressure">Normal blood pressure:</label>
-      <input type="text" id="editPressure" >
-      <label for="editBMI">Body mass index</label>
-      <input type="text" id="editBMI" >
-      <label for="editHeartDisease">Past diseases of the cardiovascular system:</label>
-      <input type="text" id="editHeartDisease" >
+      <div class="input-group">
+        <input required=""  name="text" autocomplete="off" class="input" type="number" id="editAge">
+        <label for="editAge" class="user-label">Age</label>
+      </div>
+      <div class="input-group">
+        <input required=""  name="text" autocomplete="off" class="input" type="number" id="editPressure">
+        <label for="editPressure" class="user-label">Normal pressure</label>
+      </div>
+      <div class="input-group">
+        <input required=""  name="text" autocomplete="off" class="input" type="number" id="editBMI">
+        <label for="editBMI" class="user-label">Body mass index</label>
+      </div>
+      <div class="input-group">
+        <input required=""  name="text" autocomplete="off" class="input" type="text" id="editHeartDisease">
+        <label for="editHeartDisease" class="user-label">Past diseases</label>
+      </div>
     `;
   } else if (selectedDoctor === 'Dentist') {
     additionalFieldsContainer.innerHTML = `
-      <label for="editLastVisitDate">Date of the last visit:</label>
-      <input type="date" id="editLastVisitDate">
+    <label for="editLastVisitDate" class="select__label name__select4">Date of the last visit</label>
+    <div class="input-group">
+      <input required="" name="text" autocomplete="off" class="input edit__date" type="date" id="editLastVisitDate">
+    </div>
     `;
   } else if (selectedDoctor === 'Therapist') {
     additionalFieldsContainer.innerHTML = `
-      <label for="editAge">Age:</label>
-      <input type="number" id="editAge">
+    <div class="input-group">
+      <input required=""  name="text" autocomplete="off" class="input" type="number" id="editAge">
+      <label for="editAge" class="user-label">Age</label>
+    </div>
     `;
   }
 }
@@ -167,12 +167,12 @@ function handleDoctorChange() {
 function closeModal() {
   const editModal = document.getElementById("editModal");
   editModal.style.display = "none";
-  const editForm = document.querySelector(".edit-form")
+  const editForm = document.querySelector(".edit__form")
   editForm.innerHTML = "";
 }
 
 async function saveChanges(cardId) {
-  const editForm = document.querySelector(".edit-form")
+  const editForm = document.querySelector(".edit__form")
   const cardContainer = document.querySelector(`.card[data-id= "${cardId}"]`);
   const newName = editForm.querySelector("#editName").value;
   const newDoctor = editForm.querySelector("#editDoctor").value;
@@ -194,12 +194,12 @@ async function saveChanges(cardId) {
     const newBMi = editForm.querySelector("#editBMI").value;
     const newDesease = editForm.querySelector("#editHeartDisease").value;
     updatedData.age = newAge;
-    updatedData.pressure = newPressure;
-    updatedData.bmi = newBMi;
-    updatedData.diseases = newDesease;
+    updatedData.pulse = newPressure;
+    updatedData.massIndex = newBMi;
+    updatedData.pastDiseases = newDesease;
   } else if (newDoctor === "Dentist") {
     const newDate = editForm.querySelector("#editLastVisitDate").value;
-    updatedData.date = newDate;
+    updatedData.lastVisit = newDate;
   } else if (newDoctor === "Therapist") {
     const newAge = editForm.querySelector("#editAge").value;
     updatedData.age = newAge;
@@ -215,12 +215,18 @@ async function saveChanges(cardId) {
   });
 
   cardContainer.innerHTML = `
-      <p>Name: ${newName}</p>
-      <p>Doctor: ${newDoctor}</p>
-      <button onclick="showMore(${cardId})">Show more</button>
-      <button onclick="openEditModal(${cardId})">Edit</button>
-      <span class="delete-icon" onclick="deleteCard(${cardId})">&#10006;</span>
+  <div class="card__text">
+  <h4>Name:</h4> <p>${newName}</p>
+  <h4>Doctor:</h4> <p>${newDoctor}</p>
+  <h4>Description:</h4> <p>${newDescription}</p>
+  </div>
+  <div class="button__contianer">
+  <button onclick="showMore(${cardId})">Show more</button>
+  <button onclick="openEditModal(${cardId})">Edit</button>
+  </div>
+  <span class="delete-icon" onclick="deleteCard(${cardId})">&#10006;</span>
       `;
+
   closeModal();
 }
 
@@ -236,32 +242,32 @@ async function showMore(cardId) {
   const detailsContainer = document.getElementById("detailsContainer");
   const detailsContent = document.createElement("div");
 
-  detailsContent.className = "details-content";
+  detailsContent.className = "details__content";
   const baseInfo = `
-    <p>Name: ${cardData.name}</p>
-    <p>Doctor: ${cardData.doctor}</p>
-    <p>Description: ${cardData.description}</p>
-    <p>Priority: ${cardData.priority}</p>
-    <p>Status: ${cardData.status}</p>
+    <h4>Name:</h4> <p> ${cardData.name}</p>
+    <h4>Doctor: <span>${cardData.doctor}</span></h4>
+    <h4>Description:</h4> <p> ${cardData.description}</p>
+    <h4>Priority: <span>${cardData.priority}</span></h4>
+    <h4>Status: <span>${cardData.status}</span></h4>
   `;
 
   if (cardData.doctor === 'Cardiologist') {
     detailsContent.innerHTML = `
     ${baseInfo}
-      <p>Age: ${cardData.age}</p>
-      <p>Normal blood pressure: ${cardData.pressure}</p>
-      <p>Body mass index: ${cardData.bmi}</p>
-      <p>Past diseases of the cardiovascular system: ${cardData.diseases}</p>
+      <h4>Age: <span>${cardData.age}</span></h4>
+      <h4>Normalpressure: <span>${cardData.pulse}</span></h4>
+      <h4>Body mass index: <span>${cardData.massIndex}</span></h4>
+      <h4>Past diseases:</h4> <p> ${cardData.pastDiseases}</p>
     `;
   } else if (cardData.doctor === 'Dentist') {
     detailsContent.innerHTML = `
     ${baseInfo}
-      <p>Date of the last visit: ${cardData.date}</p>
+      <h4>Date of the last visit:</h4> <p> ${cardData.lastVisit}</p>
     `;
   } else if (cardData.doctor === 'Therapist') {
     detailsContent.innerHTML = `
     ${baseInfo}
-      <p>Age: ${cardData.age}</p>
+    <h4>Age: <span>${cardData.age}</span></h4>
     `;
   }
 
@@ -272,34 +278,46 @@ async function showMore(cardId) {
   detailsModal.style.display = "block";
 }
 
-function closeDetailsModal() {
+function closeShowMore() {
   const detailsModal = document.getElementById("detailsModal");
   detailsModal.style.display = "none";
 }
 
-function filterCards() {
+async function filterCards() {
   const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const doctorFilter = document.getElementById("doctorFilter").value;
   const statusFilter = document.getElementById("statusFilter").value;
   const priorityFilter = document.getElementById("priorityFilter").value;
-  const cards = document.querySelectorAll(".card");
+
+  const response = await fetch(`https://ajax.test-danit.com/api/v2/cards`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  const cards = await response.json();
 
   cards.forEach(card => {
-    const nameElement = card.querySelector('p:first-child');
-    const statusElement = card.getAttribute('data-status');
-    const priorityElement = card.getAttribute('data-priority');
+    const cardToRemove = document.querySelector(`.card[data-id="${card.id}"]`);
+    const nameElement = card.name;
+    const doctorElement = card.doctor;
+    const statusElement = card.status;
+    const priorityElement = card.priority;
 
-    const name = nameElement ? nameElement.innerText.split(': ')[1].toLowerCase() : "";
+    const name = nameElement ? nameElement.toLowerCase() : "";
+    const doctor = doctorElement ? doctorElement : "";
     const status = statusElement ? statusElement.toLowerCase() : "";
     const priority = priorityElement ? priorityElement.toLowerCase() : "";
 
     const nameMatch = name.includes(searchInput);
+    const doctorMatch = (doctorFilter === '' || doctor === doctorFilter);
     const statusMatch = (statusFilter === '' || status === statusFilter);
     const priorityMatch = (priorityFilter === '' || priority === priorityFilter);
 
-    if (nameMatch && statusMatch && priorityMatch) {
-      card.style.display = "";
+    if (nameMatch && statusMatch && priorityMatch && doctorMatch) {
+      cardToRemove.style.display = "";
     } else {
-      card.style.display = "none";
+      cardToRemove.style.display = "none";
     }
   });
 }
