@@ -44,6 +44,7 @@ async function login() {
     enterBtn.addEventListener('click', showModal);
   } else {
     showHide();
+    await fetchAndDisplayCards();
   }
 
   logoutBtn.addEventListener('click', () => {
@@ -85,22 +86,47 @@ async function login() {
     sessionStorage.token = token;
 
     if (token) {
-      showHide();
-      form.style.display = 'none';
+        showHide();
+        form.style.display = 'none';
+        trueToken = token;
+        await fetchAndDisplayCards();
     }
-    trueToken = token;
 
     return token;
   }
-
 }
 
-
+async function fetchAndDisplayCards() {
+    const token = sessionStorage.getItem('token');
+  
+    if (token) {
+      try {
+        const response = await fetch("https://ajax.test-danit.com/api/v2/cards", {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+  
+        if (response.ok) {
+          const cards = await response.json();
+  
+          const taskBoard = document.querySelector("#taskBoard");
+          taskBoard.innerHTML = "";
+  
+          cards.forEach(async (cardData) => {
+            await displayCard(cardData);
+          });
+        } else {
+          console.error("Error fetching cards:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      }
+    }
+  }
 
 login();
-
-const token = sessionStorage.getItem('token');
-
 
 async function displayCard(cardData) {
   const taskBoard = document.querySelector("#taskBoard");
@@ -139,7 +165,7 @@ async function getAllCards() {
   });
 }
 
-getAllCards();
+
 
 async function deleteCard(cardId) {
   const confirmation = confirm("Are you sure, you want to delete?");
@@ -164,6 +190,7 @@ async function deleteCard(cardId) {
 
 
 async function openEditModal(cardId) {
+    const token = sessionStorage.getItem('token');
   const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${cardId}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -274,6 +301,7 @@ function closeModal() {
 }
 
 async function saveChanges(cardId) {
+    const token = sessionStorage.getItem('token');
   const editForm = document.querySelector(".edit__form")
   const cardContainer = document.querySelector(`.card[data-id= "${cardId}"]`);
   const newName = editForm.querySelector("#editName").value;
@@ -333,7 +361,8 @@ async function saveChanges(cardId) {
 }
 
 async function showMore(cardId) {
-  const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${cardId}`, {
+    const token = sessionStorage.getItem('token');
+    const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${cardId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -386,6 +415,7 @@ function closeShowMore() {
 }
 
 async function filterCards() {
+    const token = sessionStorage.getItem('token');
   const searchInput = document.getElementById("searchInput").value.toLowerCase();
   const doctorFilter = document.getElementById("doctorFilter").value;
   const statusFilter = document.getElementById("statusFilter").value;
