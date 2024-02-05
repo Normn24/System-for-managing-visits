@@ -29,8 +29,11 @@ async function showHide() {
   const logoutBtn = document.querySelector('.logout-button');
   const createVisitBtn = document.querySelector('.create-visit-button');
   const filterPage = document.querySelector(".filter__section");
+  const header = document.querySelector(".header");
 
-
+  header.style.background = "none";
+  header.style.height = "auto";
+  filterPage.style.display = "block";
   enterBtn.classList.add('hidden');
   logoutBtn.classList.remove('hidden');
   createVisitBtn.classList.remove('hidden');
@@ -86,10 +89,10 @@ async function login() {
     sessionStorage.token = token;
 
     if (token) {
-        showHide();
-        form.style.display = 'none';
-        trueToken = token;
-        await fetchAndDisplayCards();
+      showHide();
+      form.style.display = 'none';
+      trueToken = token;
+      await fetchAndDisplayCards();
     }
 
     return token;
@@ -97,34 +100,34 @@ async function login() {
 }
 
 async function fetchAndDisplayCards() {
-    const token = sessionStorage.getItem('token');
-  
-    if (token) {
-      try {
-        const response = await fetch("https://ajax.test-danit.com/api/v2/cards", {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-  
-        if (response.ok) {
-          const cards = await response.json();
-  
-          const taskBoard = document.querySelector("#taskBoard");
-          taskBoard.innerHTML = "";
-  
-          cards.forEach(async (cardData) => {
-            await displayCard(cardData);
-          });
-        } else {
-          console.error("Error fetching cards:", response.statusText);
+  const token = sessionStorage.getItem('token');
+
+  if (token) {
+    try {
+      const response = await fetch("https://ajax.test-danit.com/api/v2/cards", {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
-      } catch (error) {
-        console.error("Error fetching cards:", error);
+      });
+
+      if (response.ok) {
+        const cards = await response.json();
+
+        const taskBoard = document.querySelector("#taskBoard");
+        taskBoard.innerHTML = "";
+
+        cards.forEach(async (cardData) => {
+          await displayCard(cardData);
+        });
+      } else {
+        console.error("Error fetching cards:", response.statusText);
       }
+    } catch (error) {
+      console.error("Error fetching cards:", error);
     }
   }
+}
 
 login();
 
@@ -190,7 +193,7 @@ async function deleteCard(cardId) {
 
 
 async function openEditModal(cardId) {
-    const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${cardId}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -208,8 +211,8 @@ async function openEditModal(cardId) {
       <input required="" type="text" name="text" autocomplete="off" class="input" id="editName" value="${cards.name}">
       <label for="editName" class="user-label">Name</label>
     </div>
-    <label for="editDoctor" class="select__label name__select1">Doctor</label>
     <div class="select select__edit-container">
+    <label for="editDoctor" class="select__label">Doctor</label>
     <select id="editDoctor" class="edit__select" onchange="handleDoctorChange()">
     <option value="Cardiologist" ${optionActive(cards.doctor, "Cardiologist")}>Cardiologist</option>
     <option value="Dentist"  ${optionActive(cards.doctor, "Dentist")}>Dentist</option>
@@ -221,16 +224,16 @@ async function openEditModal(cardId) {
     <label for="editDescription" class="user-label">Description</label>
   </div>
     
-    <label for="editStatus" class="select__label name__select2">Status</label>
-    <div class="select select__edit-container">
+  <div class="select select__edit-container">
+  <label for="editStatus" class="select__label">Status</label>
     <select id="editStatus" class="edit__select">
       <option value="" disabled selected>Select status</option>
       <option value="active" ${optionActive(cards.status, "active")}>Active</option>
       <option value="completed" ${optionActive(cards.status, "completed")}>Completed</option>
     </select>
     </div>
-    <label for="editPriority" class="select__label name__select3">Priority</label>
     <div class="select select__edit-container">
+    <label for="editPriority" class="select__label ">Priority</label>
     <select id="editPriority" class="edit__select">
       <option value="" disabled selected>Select priority</option>
       <option value="low" ${optionActive(cards.priority, "low")}>Low</option>
@@ -278,8 +281,8 @@ function handleDoctorChange() {
     `;
   } else if (selectedDoctor === 'Dentist') {
     additionalFieldsContainer.innerHTML = `
-    <label for="editLastVisitDate" class="select__label name__select4">Date of the last visit</label>
     <div class="input-group">
+    <label for="editLastVisitDate" class="select__label">Date of the last visit</label>
       <input required="" name="text" autocomplete="off" class="input edit__date" type="date" id="editLastVisitDate">
     </div>
     `;
@@ -301,7 +304,7 @@ function closeModal() {
 }
 
 async function saveChanges(cardId) {
-    const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const editForm = document.querySelector(".edit__form")
   const cardContainer = document.querySelector(`.card[data-id= "${cardId}"]`);
   const newName = editForm.querySelector("#editName").value;
@@ -361,8 +364,8 @@ async function saveChanges(cardId) {
 }
 
 async function showMore(cardId) {
-    const token = sessionStorage.getItem('token');
-    const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${cardId}`, {
+  const token = sessionStorage.getItem('token');
+  const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${cardId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -375,9 +378,9 @@ async function showMore(cardId) {
 
   detailsContent.className = "details__content";
   const baseInfo = `
-    <h4>Name:</h4> <p> ${cardData.name}</p>
+    <h4>Name: <span>${cardData.name}</span></h4>
     <h4>Doctor: <span>${cardData.doctor}</span></h4>
-    <h4>Description:</h4> <p> ${cardData.description}</p>
+    <h4>Description: <span>${cardData.description}</span></h4>
     <h4>Priority: <span>${cardData.priority}</span></h4>
     <h4>Status: <span>${cardData.status}</span></h4>
   `;
@@ -388,7 +391,7 @@ async function showMore(cardId) {
       <h4>Age: <span>${cardData.age}</span></h4>
       <h4>Normalpressure: <span>${cardData.pulse}</span></h4>
       <h4>Body mass index: <span>${cardData.massIndex}</span></h4>
-      <h4>Past diseases:</h4> <p> ${cardData.pastDiseases}</p>
+      <h4>Past diseases: <span>${cardData.pastDiseases}</span></h4>
     `;
   } else if (cardData.doctor === 'Dentist') {
     detailsContent.innerHTML = `
@@ -415,7 +418,7 @@ function closeShowMore() {
 }
 
 async function filterCards() {
-    const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const searchInput = document.getElementById("searchInput").value.toLowerCase();
   const doctorFilter = document.getElementById("doctorFilter").value;
   const statusFilter = document.getElementById("statusFilter").value;
