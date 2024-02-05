@@ -1,4 +1,6 @@
-* {
+@import '../scss/header.scss';
+@import '../scss/main.scss';
+*{
   margin: 0;
   padding: 0;
 }
@@ -16,6 +18,13 @@ p,
 h1,
 h2,
 h3 {
+  font-family: 'Inter', sans-serif;
+  color: #011312;
+  margin: 0;
+  padding: 0;
+}
+
+p, h1, h2, h3 {
   margin: 0;
   padding: 0;
 }
@@ -25,8 +34,8 @@ a {
   outline: 0;
 }
 
-ul,
-li {
+
+ul, li {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -290,7 +299,7 @@ button:active {
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   left: 0;
   top: 0;
   width: 100%;

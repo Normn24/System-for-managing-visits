@@ -172,6 +172,7 @@ async function getAllCards() {
 
 async function deleteCard(cardId) {
   const confirmation = confirm("Are you sure, you want to delete?");
+  const token = sessionStorage.getItem('token');
 
   if (confirmation) {
     const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${cardId}`, {
@@ -299,7 +300,7 @@ function handleDoctorChange() {
 function closeModal() {
   const editModal = document.getElementById("editModal");
   editModal.style.display = "none";
-  const editForm = document.querySelector(".edit__form")
+  const editForm = document.querySelector(".edit__form");
   editForm.innerHTML = "";
 }
 
@@ -388,7 +389,6 @@ async function showMore(cardId) {
   if (cardData.doctor === 'Cardiologist') {
     detailsContent.innerHTML = `
     ${baseInfo}
-      <h4>Age: <span>${cardData.age}</span></h4>
       <h4>Normalpressure: <span>${cardData.pulse}</span></h4>
       <h4>Body mass index: <span>${cardData.massIndex}</span></h4>
       <h4>Past diseases: <span>${cardData.pastDiseases}</span></h4>
@@ -456,3 +456,13 @@ async function filterCards() {
     }
   });
 }
+
+
+
+
+
+
+
+
+
+
