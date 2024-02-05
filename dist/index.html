@@ -7,10 +7,51 @@
   <link rel="stylesheet" href="css/style.min.css">
   <title>Pet Project4</title>
 </head>
-
 <body>
-
-	<script src="js/main.min.js"></script>
+<header class='header'><h2 class="header__name">Medical Adva</h2> 
+    <button class="header__btn-make-visit">Створити візит</button>
+    <h3 class="header__greetings">Hello, Welcome 🎉</h3>
+<h2 class = 'header__appointment-heading'>No items have been added</h2>   
+<form class="header__form form">
+    <p class="form__paragraph-choose-doctor">Select doctor:</p>
+    <select class="form__selector-doctors">
+        <option style="display:none" selected></option>
+        <option class="form__selector-option" value="Therapist">Therapist</option>
+        <option class="form__selector-option" value="Cardiologist">Cardiologist</option>
+        <option class="form__selector-option" value="Dentist">Dentist</option>
+    </select>
+    <p class="form__paragraph-purpose">Purpose:</p>
+    <input placeholder="Enter the purpose of your visit" class="form__purpose">
+    <p class="form__paragraph-description">Description:</p>
+    <input class="form__description" placeholder="Enter additional information about the visit">
+    <p class="form__paragraph-urgency">Visit urgency</p>
+    <select placeholder="Select visit urgency" class="form__selector-urgency">
+        <option style="display:none" selected></option>
+        <option value="High">High</option>
+        <option value="Normal">Normal</option>
+        <option value="Low">Low</option>
+    </select>
+    <p class="form__paragraph-name">Full Name:</p>
+    <input placeholder="Enter your full name" class="form__patient-name">
+    <p class="form__paragraph-last-visit">Date of last visit:</p>
+    <input placeholder="You didn't specify the date" class="form__last-visit" type="date">
+    <p class="form__paragraph-age">Age:</p>
+    <input placeholder="Enter your full age" class="form__age">
+    <p class="form__paragraph-pulse">Blood Pressure:</p>
+    <input placeholder="Enter your blood pressure in normal condition" class="form__pulse">
+    <p class="form__paragraph-mass-index">Body Mass Index:</p>
+    <input placeholder="Enter your body mass index" class="form__mass-index">
+    <p class="form__paragraph-past-diseases">Cardiovascular Diseases:</p>
+    <input placeholder="Enter information about past cardiovascular diseases" class="form__past-diseases">
+    <p class="form__paragraph-comment">Enter a comment for the doctor, if you wish:</p>
+    <input placeholder="Enter your comment" class="form__comment">
+    <p class="form__error">All fields must be filled in</p>
+    <button class="form__button-close-form">Close</button>
+    <button class="form__button-create-visit">Create Visit</button>
+</form>
+</header>
+<main></main>
+  <script src="js/main.min.js"></script>
 </body>
 
 </html>

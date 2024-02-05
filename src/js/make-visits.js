@@ -2,146 +2,137 @@
 const header = document.querySelector('header')
 const headerGreetings = document.querySelectorAll('.header__greetings')
 const headerAppointmentHeading = document.querySelectorAll('.header__appointment-heading')
+const main = document.querySelector('main')
 
-const btnCreateVisit = document.createElement('button')
-btnCreateVisit.classList.add('form__button-create-visit')
-btnCreateVisit.innerHTML = 'Створити візит'
+const btnMakeForm = document.querySelector('.header__btn-make-visit')
+const form = document.querySelector('.header__form')
+const btnCloseForm = document.querySelector('.form__button-close-form')
+const selectMenuDoctors = document.querySelector('.form__selector-doctors')
+const purpose = document.querySelector('.form__purpose')
+const description = document.querySelector('.form__description')
+const selectUrgency = document.querySelector('.form__selector-urgency')
+const fullName = document.querySelector('.form__patient-name')
+const lastVisit = document.querySelector('.form__last-visit')
+const age = document.querySelector('.form__age')
+const pulse = document.querySelector('.form__pulse')
+const massIndex = document.querySelector('.form__mass-index')
+const pastDiseases = document.querySelector('.form__past-diseases')
+const btnCreateVisit = document.querySelector('.form__button-create-visit')
+const paragraphChooseDoctor = document.querySelector('.form__paragraph-choose-doctor')
+const paragraphPurpose = document.querySelector('.form__paragraph-purpose')
+const paragraphDescription = document.querySelector('.form__paragraph-description')
+const paragraphUrgency = document.querySelector('.form__paragraph-urgency')
+const paragraphName = document.querySelector('.form__paragraph-name')
+const paragraphLastVisit = document.querySelector('.form__paragraph-last-visit')
+const paragraphAge = document.querySelector('.form__paragraph-age')
+const paragraphPulse = document.querySelector('.form__paragraph-pulse')
+const paragraphMassIndex = document.querySelector('.form__paragraph-mass-index')
+const paragraphPastDiseases = document.querySelector('.form__paragraph-past-diseases')
+const paragraphError = document.querySelector('.form__error')
+const paragraphComment = document.querySelector('.form__paragraph-comment')
+const comment = document.querySelector('.form__comment')
+let formData = []
 class Module {
     constructor() {
-        this.btnCloseForm
-        this.form
+
     }
 
-    makeForm() {
-        const form = document.createElement('form')
-        form.classList.add('header__form')
-        form.classList.add('form')
-       header.appendChild(form);
-        const btnCloseForm = document.createElement('button');
-        this.btnCloseForm = btnCloseForm
-       btnCloseForm.innerText = 'Закрити'
-           btnCloseForm.classList.add('form__button-close-form')
-
-
-        this.form = form
-    }
 
     closeForm() {
-        this.form.appendChild(this.btnCloseForm);
-        this.btnCloseForm.addEventListener('click', () => {
-            header.removeChild(this.form);
-            headerAppointmentHeading.forEach((element)=>{
-                element.style.display = 'flex'
-            })
+        const btn = document.getElementsByTagName('button')[0]
+        header.addEventListener('click', (event) => { 
+            if (form.style.display === 'flex') { 
+                if (event.target !== form  && event.target !== btn && !form.contains(event.target)) {
+                    form.style.display = 'none';
+                    btnMakeForm.style.display = 'block'
+                }
+            }
+        })
+       btnCloseForm.addEventListener('click', () => {
+        event.preventDefault()
+            btnMakeForm.style.display = 'inline-block'
+            form.style.display = 'none'
             headerGreetings.forEach((element)=>{
                 element.style.display = 'flex'
             })
         })
+       
     }
-    sendInfo(){
-        if(btnCreateVisit){
-         btnCreateVisit.addEventListener('click', async () => {
+    sendInfo() {
+
+        btnCreateVisit.addEventListener('click', async (event) => {
             event.preventDefault();
-                const data = new CreateVisit();
-                data.getInfo()
-            
-                try {
-             await sendInfo(data)
-            
-                    data.createCard()
-            
-                } catch (error) {
-                    console.error('Error sending data:', error);
-                 
+            const fields = Array.from(document.querySelectorAll('.form input, .form select')).some((element) => {
+                if (window.getComputedStyle(element).display === 'none') {
+                    return false; 
                 }
-            })
-            
-        }
+                if (element.value === '' && element.getAttribute('placeholder') !== 'Введіть коментарій') {
+                    const textError = element.getAttribute('placeholder') || element.getAttribute('name');
+                    paragraphError.innerText = `*${textError}`;
+                    paragraphError.style.display = 'block';
+                    return true; 
+                }
+                return false; 
+            });
+    
+            if (fields) {
+               
+                return;
+            }
+            paragraphError.style.display = 'none';
+            const data = new CreateVisit();
+            data.getInfo();
+    form.style.display = 'none'
+    btnMakeForm.style.display = 'block'
+            try {
+                await sendInfo(data);
+                data.createCard();
+                data.deleteCard();
+                saveCards.saveToLocalStorage(data);
+            } catch (error) {
+                console.error('Error sending data:', error);
+            }
+        });
     }
+ saveForm() {
+        localStorage.setItem('formState', form.style.display);
+        }
+    
+    
+  getForm() {
+        const savedState = localStorage.getItem('formState');
+        if (savedState) {
+            form.style.display = savedState;
+        }}
+        
+
 }
-const selectMenuDoctors = document.createElement('select')
-selectMenuDoctors.classList.add('form__selector-doctors')
-this.selectedMenuDoctors = selectMenuDoctors
-const defaultOption = document.createElement('option')
-defaultOption.style.display = 'none'
-defaultOption.selected = true;
-const therapist = document.createElement('option')
-therapist.value = 'Терапевт'
-therapist.innerText = "Терапевт"
-therapist.classList.add(`form__selector-option`)
-const cardiologist = document.createElement('option')
-cardiologist.value = 'Кардіолог'
-cardiologist.classList.add(`form__selector-option`)
-cardiologist.innerText = 'Кардіолог'
-const dentist = document.createElement('option')
-dentist.classList.add(`form__selector-option`)
-dentist.value = 'Стоматолог'
-dentist.innerText = 'Стоматолог'
-selectMenuDoctors.appendChild(defaultOption)
-selectMenuDoctors.appendChild(therapist)
-selectMenuDoctors.appendChild(cardiologist)
-selectMenuDoctors.appendChild(dentist)
+  
+
 class Visit {
     constructor() {
-        this.form 
+
         this.dontAddElements = true
-        this.therapist
+
     }
 
-    chooseDoctor(form) {
-        const chooseDoctors = document.createElement('p');
-        chooseDoctors.innerText = 'Оберіть лікаря:'
-
-        form.appendChild(chooseDoctors)
-        form.appendChild(selectMenuDoctors)
-    }
-    makeOptions(form) {
+    makeOptions() {
         if (selectMenuDoctors && this.dontAddElements === true) {
             this.dontAddElements = false
     
             const changeHandler = () => {
-                const purposeVisitTitle = document.createElement('p')
-                purposeVisitTitle.innerText = 'Мета візиту:'
-               
-                const purposeVisit = document.createElement('input')
-                purposeVisit.classList.add('form__purpose')
-                const descriptionVisitTitle = document.createElement('p')
-
-                descriptionVisitTitle.innerText = 'Подробиці візиту:'
-                const descriptionVisit = document.createElement('input')
-                descriptionVisit.classList.add('form__description')
-                const urgencyVisitTitle = document.createElement('p')
-                urgencyVisitTitle.innerText = 'Терміновість візиту:'
-                const urgencyVisit = document.createElement('select')
-                urgencyVisit.classList.add('form__selector-urgency')
-                const defaultOptionSec = document.createElement('option')
-defaultOptionSec.style.display = 'none'
-defaultOptionSec.selected = true;
-                const urgencyHigh = document.createElement('option')
-                urgencyHigh.value = 'Висока'
-                urgencyHigh.innerText = 'Висока'
-                const urgencyNormal = document.createElement('option')
-                urgencyNormal.value = 'Нормальна'
-                urgencyNormal.innerText = 'Нормальна'
-                const urgencyLow = document.createElement('option')
-                urgencyLow.value = 'Низька'
-                urgencyLow.innerText = 'Низька'
-                const fullNameTitle = document.createElement('p')
-                fullNameTitle.innerText = `Введіть своє повне ім'я:`
-                const fullName = document.createElement('input')
-                fullName.classList.add(('form__patient-name'))
-                form.appendChild(purposeVisitTitle)
-                form.appendChild(purposeVisit)
-                form.appendChild(descriptionVisitTitle)
-                form.appendChild(descriptionVisit)
-                form.appendChild(urgencyVisitTitle)
-                form.appendChild(urgencyVisit)
-                urgencyVisit.appendChild(defaultOptionSec)
-                urgencyVisit.appendChild(urgencyHigh)
-                urgencyVisit.appendChild(urgencyNormal)
-                urgencyVisit.appendChild(urgencyLow)
-                form.appendChild(fullNameTitle)
-                form.appendChild(fullName)
+                paragraphPurpose.style.display = 'block'
+                purpose.style.display = 'inline-block'
+                paragraphDescription.style.display = 'block'
+                description.style.display = 'block'
+                paragraphUrgency.style.display = 'block'
+                selectUrgency.style.display = 'block'
+               paragraphName.style.display = 'block'
+               fullName.style.display = 'block'
+                btnCreateVisit.style.display = 'block'
+                paragraphComment.style.display = 'block'
+                    comment.style.display = 'block'
+                header.style.height = '1000px'
                 selectMenuDoctors.removeEventListener('change', changeHandler);
 
               
@@ -152,150 +143,99 @@ defaultOptionSec.selected = true;
     }
     
 }
+
 class VisitDentist extends Visit {
     constructor() {
         super();
     }
 
-    doctorNotes(form, btnClose, btnCreate) {
-        const dateLastVisitTitle = document.createElement('p')
-        dateLastVisitTitle.innerText = 'Введіть дату останього візиту:'
-        const dateLastVisit = document.createElement('input')
-        dateLastVisit.classList.add('form__last-visit')
-        dateLastVisit.type = 'date';
-
+    doctorNotes() {
         if (selectMenuDoctors) {
             selectMenuDoctors.addEventListener('change', () => {
-                if (selectMenuDoctors.value === 'Стоматолог') {
-                    form.appendChild(dateLastVisitTitle)
-                    form.appendChild(dateLastVisit)
+                if (selectMenuDoctors.value === 'Dentist') {
+                    paragraphLastVisit.style.display = 'block'
+                    lastVisit.style.display = 'block'
 
-                    if (btnClose) {
-                        form.removeChild(btnClose)
-                        form.appendChild(btnClose)
-                    }
+
                 } else {
-                    form.removeChild(dateLastVisitTitle);
-                    form.removeChild(dateLastVisit);
+                    paragraphLastVisit.style.display = 'none'
+                    lastVisit.style.display = 'none'
                 }
-                form.appendChild(btnCreate);
-            });
+
+            })
         }
     }
 }
-
 class VisitTherapist extends Visit {
     constructor() {
         super();
     }
 
-    doctorNotes(form, btnClose, btnCreate) {
-        const ageTitle = document.createElement('p');
-        ageTitle.innerText = 'Введіть свій вік:';
-        const age = document.createElement('input');
-        age.classList.add('form__age')
+    doctorNotes() {
         if (selectMenuDoctors) {
             selectMenuDoctors.addEventListener('change', () => {
-                if ("Терапевт" === selectMenuDoctors.value) {
-                    form.appendChild(ageTitle)
-                    form.appendChild(age)
-
-                    if (btnClose) {
-                        form.removeChild(btnClose)
-                        form.appendChild(btnClose)
-                    }
+                if (selectMenuDoctors.value === 'Терапевт' || selectMenuDoctors.value === "Therapist") {
+                    paragraphAge.style.display = 'block'
+                    age.style.display = 'block'
                 } else {
-                    form.removeChild(ageTitle)
-                    form.removeChild(age)
+                    paragraphAge.style.display = 'none'
+                    age.style.display = 'none'
                 }
-
-                form.appendChild(btnCreate);
             });
         }
     }
 }
-
 class VisitCardiologist extends Visit {
     constructor() {
         super();
     }
 
-    doctorNotes(form, btnClose, btnCreate) {
-        const ageTitle = document.createElement('p');
-        ageTitle.innerText = 'Введіть свій вік:';
-        const age = document.createElement('input');
-        age.classList.add('form__age')
-        const normalPulseTitle = document.createElement('p');
-        normalPulseTitle.innerText = 'Введіть свій тиск у звичайному стані:';
-        const normalPulse = document.createElement('input');
-        normalPulse.classList.add('form__pulse')
-        const bodyMassIndexTitle = document.createElement('p');
-        bodyMassIndexTitle.innerText = 'Введіть індекс маси тіла:';
-        const bodyMassIndex = document.createElement('input');
-        bodyMassIndex.classList.add('form__mass-index')
-        const pastDiseaseCardiovascularSystemTitle = document.createElement('p');
-        pastDiseaseCardiovascularSystemTitle.innerText = "Впишіть у поле, якщо перенесли захворювання серцево-судинної системи:";
-        const pastDiseaseCardiovascularSystem = document.createElement('input');
-pastDiseaseCardiovascularSystem.classList.add('form__past-diseases')
+    doctorNotes() {
         if (selectMenuDoctors) {
-            selectMenuDoctors.addEventListener('click', () => {
-                if (selectMenuDoctors.value === "Кардіолог") {
-                    form.appendChild(ageTitle);
-                    form.appendChild(age);
-                    form.appendChild(normalPulseTitle);
-                    form.appendChild(normalPulse);
-                    form.appendChild(bodyMassIndexTitle);
-                    form.appendChild(bodyMassIndex);
-                    form.appendChild(pastDiseaseCardiovascularSystemTitle);
-                    form.appendChild(pastDiseaseCardiovascularSystem);
+            selectMenuDoctors.addEventListener('change', () => {
+                if (selectMenuDoctors.value === "Cardiologist") {
+                   paragraphPastDiseases.style.display = 'block'
+                  pastDiseases.style.display = 'bloke'
+                  paragraphMassIndex.style.display = 'block'
+                  massIndex.style.display = 'block'
+                    paragraphPastDiseases.style.display =  'block'
+                    pastDiseases.style.display = 'block'
 
-                    if (btnClose) {
-                        form.removeChild(btnClose);
-                        form.appendChild(btnClose);
-                    }
                 } else {
-                    form.removeChild(ageTitle);
-                    form.removeChild(age);
-                    form.removeChild(normalPulseTitle);
-                    form.removeChild(normalPulse);
-                    form.removeChild(bodyMassIndexTitle);
-                    form.removeChild(bodyMassIndex);
-                    form.removeChild(pastDiseaseCardiovascularSystemTitle);
-                    form.removeChild(pastDiseaseCardiovascularSystem);
+                   paragraphPastDiseases.style.display = 'none'
+                  pastDiseases.style.display = 'none'
+                  paragraphMassIndex.style.display = 'none'
+                  massIndex.style.display = 'none'
+                    paragraphPastDiseases.style.display =  'none'
+                    pastDiseases.style.display = 'none'
                 }
-                form.appendChild(btnCreate);
+
             });
         }
     }
 }
-
-const btnMakeForm = document.querySelector('.header__btn-make-visit');
 btnMakeForm.addEventListener('click', () => {
-    headerAppointmentHeading.forEach((Element)=>{
-        Element.style.display = 'none';
-    });
+    form.style.display = `flex`
+    btnMakeForm.style.display = 'none'
     headerGreetings.forEach((Element)=>{
-        Element.style.display = 'none';
+        Element.style.display = 'none'
     });
-    
-    const module = new Module();
-    module.makeForm();
-    
-    const visit = new Visit();
-    visit.chooseDoctor(module.form);
-    visit.makeOptions(module.form, module.btnCloseForm);
-    const visitDentist = new VisitDentist();
-    visitDentist.doctorNotes(module.form, module.btnCloseForm, btnCreateVisit);
-    
-    const visitTherapist = new VisitTherapist();
-    visitTherapist.doctorNotes(module.form, module.btnCloseForm, btnCreateVisit);
-    
-    const visitCardiologist = new VisitCardiologist();
-    visitCardiologist.doctorNotes(module.form, module.btnCloseForm, btnCreateVisit);
-    module.sendInfo()
-    module.closeForm()
-
 });
+const module = new Module()
+
+const visit = new Visit()
+visit.makeOptions()
+const visitDentist = new VisitDentist()
+visitDentist.doctorNotes()
+
+const visitTherapist = new VisitTherapist()
+visitTherapist.doctorNotes()
+const visitCardiologist = new VisitCardiologist()
+visitCardiologist.doctorNotes()
+module.sendInfo()
+module.closeForm()
+
+
 
 class CreateVisit {
     constructor(){
@@ -309,55 +249,45 @@ this.pulse
 this.massIndex
 this.pastDiseases
 this.statusVisit
+this.card 
+this.id
+this.btnDelete
+this.comment
     }
     getInfo(){
-        document.querySelectorAll('.form__selector-doctors').forEach((element)=>{
-         this.doctor = element.value
-        }
-        )
-        document.querySelectorAll('.form__patient-name').forEach((element)=>{
-            this.name = element.value
-           })
-           document.querySelectorAll(`.form__selector-urgency`).forEach((element)=>{
-this.urgency = element.value
-           })
-           document.querySelectorAll(`.form__purpose`).forEach((element)=>{
-            this.purpose = element.value
-           })
-           document.querySelectorAll('.form__description').forEach((element)=>{
-            this.description = element.value
-           })
-           document.querySelectorAll('.form__last-visit').forEach((element)=>{
-            this.lastVisit = element.value
-           })
-           document.querySelectorAll('.form__age').forEach((element)=>{
-            this.age = element.value
-           })
-           document.querySelectorAll('.form__pulse').forEach((element)=>{
-            this.pulse = element.value
-           })
-           document.querySelectorAll('.form__mass-index').forEach((element)=>{
-            this.massIndex = element.value
-           })
-           document.querySelectorAll('.form__past-diseases').forEach((element)=>{
-            this.pastDiseases = element.value
-           })
+        this.doctor = form.querySelector('.form__selector-doctors').value
+        this.name = form.querySelector('.form__patient-name').value
+        this.urgency = form.querySelector('.form__selector-urgency').value
+        this.purpose = form.querySelector('.form__purpose').value
+        this.description = form.querySelector('.form__description').value
+        this.lastVisit = form.querySelector('.form__last-visit').value
+        this.age = form.querySelector('.form__age').value
+        this.pulse = form.querySelector('.form__pulse').value
+        this.massIndex = form.querySelector('.form__mass-index').value
+        this.pastDiseases = form.querySelector('.form__past-diseases').value
+        this.error = form.querySelector('.form__comment').value
     }
     createCard(){
-        const main = document.querySelector('main')
         const card = document.createElement('div')   
+        this.card = card
+        const btnDelete = document.createElement('div')
+        btnDelete.classList.add('card__delete-card')
+        this.btnDelete = btnDelete
+        this.card.appendChild(btnDelete)
         card.classList.add ('card')
 const typeDoctor = document.createElement('p')
-typeDoctor.innerText = `${this.doctor}`
+typeDoctor.innerText = `Visit to ${this.doctor}а`
 const namePatient = document.createElement('p')
 namePatient.innerText = `${this.name}`
 main.appendChild(card)
 card.appendChild(typeDoctor)
 card.appendChild(namePatient)
 const btnMoreInfo = document.createElement('button')
-btnMoreInfo.innerText = 'Показати більше'
+btnMoreInfo.innerText = 'Show more'
+btnMoreInfo.classList.add('card__btn-more-info')
 card.appendChild(btnMoreInfo)
 btnMoreInfo.addEventListener('click', ()=>{
+    btnMoreInfo.style.display = 'none'
     const age = this.age
     const purpose = this.purpose; 
     const lastVisit = this.lastVisit
@@ -379,44 +309,63 @@ statusVisit.appendChild(statusDone)
 this.statusVisit = statusVisit.value
 const statusVisitValue = this.statusVisit
 const statusVisitText = document.createElement('p')
- statusVisitText.innerText = `Статус візиту: ${statusVisitValue}`
+ statusVisitText.innerText = `Status of the visit: ${statusVisitValue}`
     const ageText = document.createElement('p')
     ageText.innerText = `${age}`
     const urgencyText = document.createElement('p')
-    urgencyText.innerText = `Терміновість: ${urgency}`
+    urgencyText.innerText = `Urgency: ${urgency}`
     const purposeText = document.createElement('p');
-    purposeText.innerText = `Ціль візиту: ${purpose}`;
+    purposeText.innerText = `Purpose: ${purpose}`;
     const lastVisitText = document.createElement('p')
     lastVisitText.innerText = `${lastVisit}`
     const massIndexText = document.createElement('p')
     massIndexText.innerText = `${massIndex}`
     const pastDiseasesText = document.createElement('p')
-    pastDiseasesText.innerText = `Інформація про перенесені захворювання серцево-судинної системи: ${pastDiseases}`
+    pastDiseasesText.innerText = `Information about previous diseases of the cardiovascular system: ${pastDiseases}`
     const descriptionText = document.createElement('p')
-    descriptionText.innerText = `Нотатки до візиту: ${description}`
+    descriptionText.innerText = `Notes for the visit: ${description}`
     const pulseText = document.createElement('p')
-    pulseText.innerText = `Пульс у звичайному стані: ${pulse}`
-    if(this.doctor === 'Кардіолог'){
+    pulseText.innerText = `The pulse is normal: ${pulse}`
+    const comment = this.comment
+    const commentText = document.createElement('p')
+    commentText.innerText = `Comment: ${comment}`
+    if(this.doctor === 'Cardiologist'){
         card.appendChild(ageText)
         card.appendChild(pulseText)
         card.appendChild(massIndexText)
         card.appendChild(pastDiseasesText)
     }
-    if(this.doctor === 'Терапевт'){
+    if(this.doctor === 'Therapist'){
         card.appendChild(ageText)
     }
-    if(this.doctor === 'Стоматолог'){
+    if(this.doctor === 'Dentist'){
         card.appendChild(lastVisitText)
     }
     card.appendChild(urgencyText)
-    card.appendChild(purposeText);
+    card.appendChild(purposeText)
     card.appendChild(descriptionText)
 card.appendChild(statusVisitText)
+card.appendChild(commentText)
+})}
+
+deleteCard(){
+this.btnDelete.addEventListener('click', async ()=>{
+
+    try {
+ await deleteCards(this.id)
+saveCards.deleteCard(this.id)
+main.removeChild(this.card)
+    } catch (error) {
+        console.error('Error sending data:', error)
+     
+    }
 })
+}
+
         }
     
-}
 async function sendInfo(data) {
+
     try {
         const response = await fetch("https://ajax.test-danit.com/api/v2/cards", {
             method: 'POST',
@@ -426,15 +375,68 @@ async function sendInfo(data) {
             },
             body: JSON.stringify(data)
         });
-        const responseData = await response.json();
-        console.log('Response data:', responseData);
-        document.querySelectorAll(`.form input, .form select`).forEach((element)=>{
-            element.value = ''
-        })
-       return responseData; 
+        
+        const responseData = await response.json()
+        console.log('Response data:', responseData)
+        console.log(responseData)
+    data.id = responseData.id
+       return responseData
+
+    }  
+    catch (error) {
+        console.error('Error sending data:', error)
+        throw new Error(error)
+    } 
+}
+async function deleteCards(id){
+    console.log(id);
+    try {
+        const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer 93d2380e-85c6-455b-bdc8-9c60e32adeec`
+            },
+        });
+
     } catch (error) {
-        console.error('Error sending data:', error);
-        throw new Error(error);
+        console.error('Error sending data:', error)
+        throw new Error(error)
     }
 }
 
+class LS{
+    constructor(){
+        this.retrieveStoredCards()
+    }
+    
+saveToLocalStorage(data) {
+    let cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
+    cardsData.push(data)
+    localStorage.setItem('storedCards', JSON.stringify(cardsData))
+}
+
+retrieveStoredCards() {
+    const cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
+ 
+    cardsData.forEach(cardData => {
+        const card = new CreateVisit()
+        Object.assign(card, cardData)
+        card.id = cardData.id; 
+        card.createCard()
+        card.deleteCard()
+    });}
+        deleteCard(id) {
+            console.log(id);
+            let cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
+            const index = cardsData.findIndex(cardData => cardData.id === id)
+            if (index !== -1) {
+                cardsData.splice(index, 1)
+                localStorage.setItem('storedCards', JSON.stringify(cardsData))
+            } else {
+                console.log('карточка не знайдена')
+            }
+        }
+    }
+
+const saveCards = new LS()
