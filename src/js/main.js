@@ -168,8 +168,6 @@ async function getAllCards() {
   });
 }
 
-
-
 async function deleteCard(cardId) {
   const confirmation = confirm("Are you sure, you want to delete?");
   const token = sessionStorage.getItem('token');
@@ -213,17 +211,17 @@ async function openEditModal(cardId) {
       <label for="editName" class="user-label">Name</label>
     </div>
     <div class="select select__edit-container">
-    <label for="editDoctor" class="select__label">Doctor</label>
-    <select id="editDoctor" class="edit__select" onchange="handleDoctorChange()">
-    <option value="Cardiologist" ${optionActive(cards.doctor, "Cardiologist")}>Cardiologist</option>
-    <option value="Dentist"  ${optionActive(cards.doctor, "Dentist")}>Dentist</option>
-    <option value="Therapist"  ${optionActive(cards.doctor, "Therapist")}>Therapist</option>
-    </select>
+      <label for="editDoctor" class="select__label">Doctor</label>
+      <select id="editDoctor" class="edit__select" onchange="handleDoctorChange()">
+        <option value="Cardiologist" ${optionActive(cards.doctor, "Cardiologist")}>Cardiologist</option>
+        <option value="Dentist"  ${optionActive(cards.doctor, "Dentist")}>Dentist</option>
+        <option value="Therapist"  ${optionActive(cards.doctor, "Therapist")}>Therapist</option>
+      </select>
     </div>
     <div class="input-group">
-    <input required="" type="text" name="text" autocomplete="off" class="input" id="editDescription" value="${cards.description}">
-    <label for="editDescription" class="user-label">Description</label>
-  </div>
+      <input required="" type="text" name="text" autocomplete="off" class="input" id="editDescription" value="${cards.description}">
+      <label for="editDescription" class="user-label">Description</label>
+    </div>
     
   <div class="select select__edit-container">
   <label for="editStatus" class="select__label">Status</label>
@@ -241,6 +239,10 @@ async function openEditModal(cardId) {
       <option value="medium" ${optionActive(cards.priority, "medium")}>Medium</option>
       <option value = "high" ${optionActive(cards.priority, "high")}> High</ >
     </select > 
+    </div>
+    <div class="input-group">
+      <input required="" type="text" name="text" autocomplete="off" class="input" id="editComment" value="${cards.comment}">
+      <label for="editComment" class="user-label">Comment</label>
     </div>
     <div id="additionalFields"></div>
     <button onclick="saveChanges(${cardId})">Save</button>
@@ -313,13 +315,15 @@ async function saveChanges(cardId) {
   const newDescription = editForm.querySelector("#editDescription").value;
   const newStatus = editForm.querySelector("#editStatus").value;
   const newPriority = editForm.querySelector("#editPriority").value;
+  const newComment = editForm.querySelector("#editComment").value;
 
   const updatedData = {
     name: newName,
     doctor: newDoctor,
     description: newDescription,
     status: newStatus,
-    priority: newPriority
+    priority: newPriority,
+    comment: newComment
   };
 
   if (newDoctor === "Cardiologist") {
@@ -384,6 +388,7 @@ async function showMore(cardId) {
     <h4>Description: <span>${cardData.description}</span></h4>
     <h4>Priority: <span>${cardData.priority}</span></h4>
     <h4>Status: <span>${cardData.status}</span></h4>
+    <h4>Comment for doctor: <span>${cardData.comment}</span></h4>
   `;
 
   if (cardData.doctor === 'Cardiologist') {

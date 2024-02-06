@@ -265,7 +265,7 @@ class CreateVisit {
         this.pulse = form.querySelector('.form__pulse').value
         this.massIndex = form.querySelector('.form__mass-index').value
         this.pastDiseases = form.querySelector('.form__past-diseases').value
-        this.error = form.querySelector('.form__comment').value
+        this.comment = form.querySelector('.form__comment').value
         this.status = "active"
     }
     // getInfo() {
