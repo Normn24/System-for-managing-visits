@@ -1,10 +1,11 @@
 
+
+const btnMakeForm = document.querySelector('.header__btn-make-visit')
 const header = document.querySelector('header')
 const headerGreetings = document.querySelectorAll('.header__greetings')
 const headerAppointmentHeading = document.querySelectorAll('.header__appointment-heading')
 const main = document.querySelector('main')
 
-const btnMakeForm = document.querySelector('.header__btn-make-visit')
 const form = document.querySelector('.header__form')
 const btnCloseForm = document.querySelector('.form__button-close-form')
 const selectMenuDoctors = document.querySelector('.form__selector-doctors')
@@ -31,6 +32,10 @@ const paragraphPastDiseases = document.querySelector('.form__paragraph-past-dise
 const paragraphError = document.querySelector('.form__error')
 const paragraphComment = document.querySelector('.form__paragraph-comment')
 const comment = document.querySelector('.form__comment')
+btnMakeForm.addEventListener('click', () => {
+    form.style.display = `flex`
+    btnMakeForm.style.display = 'none'
+});
 let formData = []
 class Module {
     constructor() {
@@ -214,13 +219,7 @@ class VisitCardiologist extends Visit {
         }
     }
 }
-btnMakeForm.addEventListener('click', () => {
-    form.style.display = `flex`
-    btnMakeForm.style.display = 'none'
-    headerGreetings.forEach((Element)=>{
-        Element.style.display = 'none'
-    });
-});
+
 const module = new Module()
 
 const visit = new Visit()
