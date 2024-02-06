@@ -10,32 +10,16 @@
 #create__selectPriority,
 #create__inputComment{
     display: none;
+    width: 100%;
 }
 
+// .form__description{
+//     width: fill-available;
+// }
+
 .header {
-    // background: url(../img/header/hero-3-cover.png);
-    // background-size: cover;
-    // width: 100%;
-    // height: 100vh;
-    // padding-bottom: 5%;
-
-    // &__name {
-    //     font-weight: 700; 
-    //     font-size: 45px; 
-    //     padding-top: 2%;
-    //     padding-left:8%;
-    //     color: aqua;
-    // }
-
-
-    // &__appointment-heading{
-    //     color: white ;
-    //     font-size: 60px;
-    //     margin-left: 10%;
-    // }
     &__form{
         width: 400px;
-        // background-color: white;
         display: none;
         flex-direction: column;
         gap: 10px;
@@ -44,36 +28,6 @@
     }
 }
 .form{
-//     & input{
-//         margin-top: 0;
-//         width: 100%;
-//         padding: 5px 10px 5px;
-//         border-bottom: 2px solid rgb(32, 155, 108);
-//         border-top: none;
-//         border-right: none;
-//         border-left: none;
-//         border-radius: 20px;
-//         display: none;
-//         font-size: 15px;
-
-// &:focus{
-//     border-top: 2px solid rgb(32, 155, 108);
-//     border-right: 2px solid rgb(32, 155, 108);
-//     border-left: 2px solid rgb(32, 155, 108);
-//     outline: none;
-//     padding: 12px;
-//     transition: 0.5s padding ease;
-//     font-size: 16px;
-// }
-    // }
-    // & p {
-    //     margin-top: 10px;
-    //     margin-left: 10px;
-    //     display: none;
-    //     &:first-child{
-    //         display: flex;
-    //     }
-    // }
     &__error{
         color: red;
         font-size: 15px;
@@ -81,44 +35,8 @@
     &__error{
         display: none;
     }
-    // & select{
-    //     margin-top: 5px;
-    //     width: 250px;
-    //     padding: 5px;
-    //     border: 2px solid rgb(32, 155, 108);
-    //     border-radius: 10px;
-    //     margin-left: 20px;
-    //     &:focus{
-    //         width: 300px;
-    //         padding: 12px;
-    // transition: 0.5s padding ease, 0.5s width ease;
-    //         outline: none;
-    //     }
 
-    // }
-
-
-    & button{
-        margin-top: 10px;
-        width: 110px;
-        height: 60px;
-        border: 3px solid rgb(32, 155, 108);
-        border-radius: 10px;
-        background-color: white;
-        background-color: rgb(32, 155, 108);
-        color: white;
-        font-weight: 500;
-        &:hover{
-            border: 3px solid rgb(32, 155, 108);
-            background-color: white;
-            color: rgb(32, 155, 108);
-            transition: 0.3s background-color ease;
-        }
-    }
     &__button-create-visit{
-        position: absolute;
-        bottom:20px;
-        right: 35px;
         display: none;
     }
 }
