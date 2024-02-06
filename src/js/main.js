@@ -154,20 +154,6 @@ async function displayCard(cardData) {
   taskBoard.appendChild(cardContainer);
 }
 
-async function getAllCards() {
-  const response = await fetch("https://ajax.test-danit.com/api/v2/cards", {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
-  const cards = await response.json();
-
-  cards.forEach(async (cardData) => {
-    await displayCard(cardData);
-  });
-}
-
 async function deleteCard(cardId) {
   const confirmation = confirm("Are you sure, you want to delete?");
   const token = sessionStorage.getItem('token');
@@ -189,7 +175,6 @@ async function deleteCard(cardId) {
     }
   }
 }
-
 
 async function openEditModal(cardId) {
   const token = sessionStorage.getItem('token');
@@ -402,7 +387,7 @@ async function showMore(cardId) {
   } else if (cardData.doctor === 'Dentist') {
     detailsContent.innerHTML = `
     ${baseInfo}
-      <h4>Date of the last visit:</h4> <p> ${cardData.lastVisit}</p>
+      <h4>Date of the last visit: <span>${cardData.lastVisit}</span></h4>
     `;
   } else if (cardData.doctor === 'Therapist') {
     detailsContent.innerHTML = `

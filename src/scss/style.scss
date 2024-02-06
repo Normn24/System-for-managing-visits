@@ -1,5 +1,3 @@
-@import '../scss/header.scss';
-@import '../scss/main.scss';
 *{
   margin: 0;
   padding: 0;
@@ -12,16 +10,6 @@ html, body {
   margin: 0;
   padding: 0;
   background-color: #181818;
-}
-
-p,
-h1,
-h2,
-h3 {
-  font-family: 'Inter', sans-serif;
-  color: #011312;
-  margin: 0;
-  padding: 0;
 }
 
 p, h1, h2, h3 {
@@ -174,6 +162,46 @@ ul, li {
 }
 
 
+// Create Cards 
+#createModal,
+#create__inputName,
+#create__inputPurpose,
+#create__inputAge,
+#create__inputPressure,
+#create__inputBMI,
+#create__inputDescription,
+#create__inputDisease,
+#create__inputLastVisit,
+#create__selectPriority,
+#create__inputComment{
+    display: none;
+    width: 100%;
+}
+
+
+.header__form{
+        width: 400px;
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        border-radius: 50px;
+        position: relative;
+    }
+
+.form{
+    &__error{
+        color: red;
+        font-size: 15px;
+    }
+    &__error{
+        display: none;
+    }
+
+    &__button-create-visit{
+        display: none;
+    }
+}
+
 
 
 
@@ -242,7 +270,7 @@ ul, li {
 
 .button__contianer{
   display: flex;
-  width: fill-available;
+  width: stretch;
   justify-content: space-between;
   align-items: center;
 }
@@ -452,7 +480,7 @@ select::-ms-expand {
   font-size: 16px;
   color: #2c3e50;
   transition: border 150ms cubic-bezier(0.4,0,0.2,1);
-  width: fill-available;
+  width: stretch;
  }
  
  .user-label {
