@@ -13,13 +13,13 @@ const description = document.querySelector('#create__inputDescription')
 const pastDiseases = document.querySelector('#create__inputDisease')
 const lastVisit = document.querySelector('#create__inputLastVisit')
 const comment = document.querySelector('#create__inputComment')
-
+const error = document.querySelector('.form__error')
 const btnCloseForm = document.querySelector('.form__button-close-form')
 const selectMenuDoctors = document.querySelector('.form__selector-doctors')
 const selectPriorityContainer = document.querySelector("#create__selectPriority")
 // const selectUrgency = document.querySelector('.form__selector-urgency')
 const btnCreateVisit = document.querySelector('.form__button-create-visit')
-
+let elementsForm = document.querySelectorAll('.form input, .form select')
 let formData = []
 class Module {
     constructor() {
@@ -31,64 +31,97 @@ class Module {
             event.preventDefault()
             form.style.display = 'none';
             // modalForm.style.display = "none";
-            createModal.style.display = "none";
+            createModal.style.display = "none"; 
+        elementsForm.forEach((element)=>{
+            element.value = ''
+        })})
 
-        })
+document.addEventListener('click', (event)=>{
+    if(event.target === createModal){
+form.style.display = `none`
+createModal.style.display = 'none'
+elementsForm.forEach((element)=>{
+    element.value = ''
+})
+    }
+})
+       
+
 
     }
     sendInfo() {
 
         btnCreateVisit.addEventListener('click', async (event) => {
             event.preventDefault();
-            // const fields = Array.from(document.querySelectorAll('.form input, .form select')).some((element) => {
-            //     if (window.getComputedStyle(element).display === 'none') {
-            //         return false;
-            //     }
-            //     if (element.value === '' && element.getAttribute('placeholder') !== 'Введіть коментарій') {
-            //         const textError = element.getAttribute('placeholder') || element.getAttribute('name');
-            //         // paragraphError.innerText = `*${textError}`;
-            //         // paragraphError.style.display = 'block';
-            //         return true;
-            //     }
-            //     return false;
-            // });
+            const fields = Array.from(document.querySelectorAll('.form div')).filter((divElement) => {
+                return window.getComputedStyle(divElement).display !== 'none' && divElement.id !== 'create__inputComment'
+            }).some((divElement) => {
+                const elements = Array.from(divElement.querySelectorAll('input, select'))
+                return elements.some((inputElement) => inputElement.value === '')
+                
+            });
+            
+            if (fields) {
+                error.style.display = 'block';
+                return;
+            } if (age.style.display !== 'none') {
 
-            // if (fields) {
+                if (parseFloat(document.querySelector('#createAge').value) >= 150 || parseFloat(document.querySelector('#createAge').value) <= 0) {
+                    error.textContent = 'Incorrect value! Enter your real age';
+                    error.style.display = 'block';
+                    return;
+                }
+            }
+            if (pulse.style.display !== 'none') {
 
-            //     return;
-            // }
-            // paragraphError.style.display = 'none';
-            const data = new CreateVisit();
+                const pressureValue = parseFloat(document.querySelector('#createPressure').value);
+                if (isNaN(pressureValue) || pressureValue >= 170 || pressureValue <= 50) {
+                    error.textContent = 'Incorrect value! Enter your real pulse';
+                    error.style.display = 'block';
+                    return;
+                }
+            }
+            if (massIndex.style.display !== 'none') {
+
+                const massValue = parseFloat(document.querySelector('#createBMI').value);
+                if (isNaN(massValue) || massValue >= 700 || massValue <= 0) {
+                    error.textContent = 'Incorrect value! Enter your real mass index';
+                    error.style.display = 'block';
+                    return;
+                }}      
+                const createNameValue = document.querySelector('#createName').value;
+                if (!isNaN(parseFloat(createNameValue))) {
+                    error.textContent = 'Incorrect value! Enter your real name';
+                    error.style.display = 'block';
+                    return;
+                }
+                if (lastVisit.style.display !== 'none') {
+                    const minimalVisit= new Date('1950-01-01')
+                    const maxVisit= new Date()
+                    const lastVisitValue =  document.querySelector('#createLastVisitDate')
+                    const convertValue = new Date(lastVisitValue.value)
+                    if (convertValue <= minimalVisit || convertValue >= maxVisit) {
+                        error.textContent = 'Incorrect value! Enter correct data';
+                        error.style.display = 'block';
+                        return;
+                    }}   
+            error.style.display = 'none'
+            const data = new CreateVisit()
             console.log(data);
-            data.getInfo();
-            form.style.display = 'none';
-            createModal.style.display = "none";
+            // data.getInfo();
+            form.style.display = 'none'
+            createModal.style.display = "none"
             // btnMakeForm.style.display = 'block'
             try {
                 await sendInfo(data);
+                await fetchAndDisplayCards()
                 // data.createCard();
                 // data.deleteCard();
                 // saveCards.saveToLocalStorage(data);
             } catch (error) {
-                console.error('Error sending data:', error);
+                console.error('Error sending data:', error)
             }
-        });
-    }
-    saveForm() {
-        localStorage.setItem('formState', form.style.display);
-    }
-
-
-    getForm() {
-        const savedState = localStorage.getItem('formState');
-        if (savedState) {
-            form.style.display = savedState;
-        }
-    }
-
-
-}
-
+        })}}
 
 class Visit {
     constructor() {
@@ -158,7 +191,7 @@ class VisitTherapist extends Visit {
     doctorNotes() {
         if (selectMenuDoctors) {
             selectMenuDoctors.addEventListener('change', () => {
-                if (selectMenuDoctors.value === 'Терапевт' || selectMenuDoctors.value === "Therapist") {
+                if (selectMenuDoctors.value === 'Cardiologist' || selectMenuDoctors.value === "Therapist") {
                     // paragraphAge.style.display = 'block'
                     age.style.display = 'block'
                 } else {
@@ -191,7 +224,7 @@ class VisitCardiologist extends Visit {
                     // paragraphMassIndex.style.display = 'none'
                     massIndex.style.display = 'none'
                     // paragraphPastDiseases.style.display = 'none'
-                    pastDiseases.style.display = 'none'
+                    pulse.style.display = 'none'
                 }
 
             });
@@ -222,23 +255,6 @@ module.closeForm()
 
 class CreateVisit {
     constructor() {
-        this.doctor
-        this.name
-        this.priority
-        this.purpose
-        this.lastVisit
-        this.age
-        this.pulse
-        this.massIndex
-        this.pastDiseases
-        this.statusVisit
-        this.card
-        this.id
-        this.btnDelete
-        this.comment
-        this.status
-    }
-    getInfo() {
         this.doctor = form.querySelector('.form__selector-doctors').value
         this.name = form.querySelector('.form__patient-name').value
         this.priority = form.querySelector('.form__selector-urgency').value
@@ -252,6 +268,20 @@ class CreateVisit {
         this.error = form.querySelector('.form__comment').value
         this.status = "active"
     }
+    // getInfo() {
+    //     this.doctor = form.querySelector('.form__selector-doctors').value
+    //     this.name = form.querySelector('.form__patient-name').value
+    //     this.priority = form.querySelector('.form__selector-urgency').value
+    //     this.purpose = form.querySelector('.form__purpose').value
+    //     this.description = form.querySelector('.form__description').value
+    //     this.lastVisit = form.querySelector('.form__last-visit').value
+    //     this.age = form.querySelector('.form__age').value
+    //     this.pulse = form.querySelector('.form__pulse').value
+    //     this.massIndex = form.querySelector('.form__mass-index').value
+    //     this.pastDiseases = form.querySelector('.form__past-diseases').value
+    //     this.error = form.querySelector('.form__comment').value
+    //     this.status = "active"
+    // }
 }
 
 
@@ -281,58 +311,58 @@ async function sendInfo(data) {
         throw new Error(error)
     }
 }
-async function deleteCards(id) {
-    const token = sessionStorage.getItem('token');
+// async function deleteCards(id) {
+//     const token = sessionStorage.getItem('token');
 
-    console.log(id);
-    try {
-        const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
+//     console.log(id);
+//     try {
+//         const response = await fetch(`https://ajax.test-danit.com/api/v2/cards/${id}`, {
+//             method: 'DELETE',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'Authorization': `Bearer ${token}`
+//             },
+//         });
 
-    } catch (error) {
-        console.error('Error sending data:', error)
-        throw new Error(error)
-    }
-}
+//     } catch (error) {
+//         console.error('Error sending data:', error)
+//         throw new Error(error)
+//     }
+// }
 
-class LS {
-    constructor() {
-        this.retrieveStoredCards()
-    }
+// class LS {
+//     constructor() {
+//         this.retrieveStoredCards()
+//     }
 
-    saveToLocalStorage(data) {
-        let cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
-        cardsData.push(data)
-        localStorage.setItem('storedCards', JSON.stringify(cardsData))
-    }
+//     saveToLocalStorage(data) {
+//         let cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
+//         cardsData.push(data)
+//         localStorage.setItem('storedCards', JSON.stringify(cardsData))
+//     }
 
-    retrieveStoredCards() {
-        const cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
+//     retrieveStoredCards() {
+//         const cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
 
-        cardsData.forEach(cardData => {
-            const card = new CreateVisit()
-            Object.assign(card, cardData)
-            card.id = cardData.id;
-            card.createCard()
-            card.deleteCard()
-        });
-    }
-    deleteCard(id) {
-        console.log(id);
-        let cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
-        const index = cardsData.findIndex(cardData => cardData.id === id)
-        if (index !== -1) {
-            cardsData.splice(index, 1)
-            localStorage.setItem('storedCards', JSON.stringify(cardsData))
-        } else {
-            console.log('карточка не знайдена')
-        }
-    }
-}
+//         cardsData.forEach(cardData => {
+//             const card = new CreateVisit()
+//             Object.assign(card, cardData)
+//             card.id = cardData.id;
+//             card.createCard()
+//             card.deleteCard()
+//         });
+//     }
+//     deleteCard(id) {
+//         console.log(id);
+//         let cardsData = JSON.parse(localStorage.getItem('storedCards')) || []
+//         const index = cardsData.findIndex(cardData => cardData.id === id)
+//         if (index !== -1) {
+//             cardsData.splice(index, 1)
+//             localStorage.setItem('storedCards', JSON.stringify(cardsData))
+//         } else {
+//             console.log('карточка не знайдена')
+//         }
+//     }
+// }
 
 // const saveCards = new LS()

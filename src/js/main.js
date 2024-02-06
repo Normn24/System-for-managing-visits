@@ -389,6 +389,7 @@ async function showMore(cardId) {
   if (cardData.doctor === 'Cardiologist') {
     detailsContent.innerHTML = `
     ${baseInfo}
+      <h4>Age: <span>${cardData.age}</span></h4>
       <h4>Normalpressure: <span>${cardData.pulse}</span></h4>
       <h4>Body mass index: <span>${cardData.massIndex}</span></h4>
       <h4>Past diseases: <span>${cardData.pastDiseases}</span></h4>
