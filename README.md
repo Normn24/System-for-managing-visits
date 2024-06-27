@@ -1,4 +1,4 @@
-# Pet-Project4
+# System for managing visits
 
 Учасники:
 
